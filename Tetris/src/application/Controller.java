@@ -1,5 +1,7 @@
 package application;
 
+import javafx.scene.shape.Rectangle;
+
 public class Controller {
     public static final int MOVE = Tetris.MOVE;
     public static final int SIZE = Tetris.SIZE;
