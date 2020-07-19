@@ -30,25 +30,25 @@ public class Form {
 	// set the color of the stones (colors can be changed
 	switch(name) {
 		case "j":
-			color = Color.SLATEGREY;
+			color = Color.LIME;
 			break;
 		case "l":
-			color = Color.DARKGOLDENROD;
+			color = Color.DEEPPINK;
 			break;
 		case "o":
-			color = Color.INDIANRED;
+			color = Color.CYAN;
 			break;
 		case "s":
-			color = Color.FORESTGREEN;
+			color = Color.BLUE;
 			break;
 		case "t":
-			color = Color.CADETBLUE;
+			color = Color.RED;
 			break;
 		case "z":
-			color = Color.HOTPINK;
+			color = Color.DARKVIOLET;
 			break;
 		case "i":
-			color = Color.SANDYBROWN;
+			color = Color.ORANGERED;
 			break;
 	
 	}

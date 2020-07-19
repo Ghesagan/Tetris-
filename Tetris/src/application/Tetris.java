@@ -26,7 +26,7 @@ public class Tetris extends Application {
     public static int[][] MESH = new int[XMAX / SIZE][YMAX / SIZE];
     private static Pane group = new Pane();
     private static Form object;
-    private static Scene scene = new Scene(group, XMAX + 150, YMAX);
+    private static Scene scene = new Scene(group, XMAX + 150, YMAX, Color.BLACK);
     public static int score = 0;
     private static int top = 0;
     private static boolean game = true;
@@ -44,10 +44,31 @@ public class Tetris extends Application {
         }
 
         Line line = new Line(XMAX, 0, XMAX, YMAX);
+        line.setStroke(Color.WHITE);
+        
+        // To make the gridlines
+        for(int i = 0; i < 12; i++) {
+        	Line gridline = new Line(SIZE*i+SIZE, 0, SIZE*i +SIZE, YMAX);
+        	gridline.setStroke(Color.WHITE);
+        	group.getChildren().add(gridline);
+        }
+        for(int i = 0; i < 24; i++) {
+        	Line gridline = new Line(0, SIZE*i+SIZE, XMAX, SIZE*i+SIZE);
+        	gridline.setStroke(Color.WHITE);
+        	group.getChildren().add(gridline);
+        }
+        
+        
+        
+        
+        
+        
+        
         Text scoretext = new Text("Score: ");
         scoretext.setStyle("-fx-font: 20 arial;");
         scoretext.setY(50);
         scoretext.setX(XMAX + 5);
+        scoretext.setFill(Color.WHITE);
         Text level = new Text("Lines: ");
         level.setStyle("-fx-font: 20 arial;");
         level.setY(100);
@@ -120,11 +141,35 @@ public class Tetris extends Application {
                     case UP:
                         MoveTurn(form);
                         break;
+                        
+                    case CONTROL:
+                    	HardDrop(form);
+                    	break;
                 }
             }
         });
     }
-
+ 
+    private void HardDrop(Form form) {
+//    	int movea = MESH[(int) form.a.getX() / SIZE][((int) form.a.getY() / SIZE)];
+//        int moveb = MESH[(int) form.b.getX() / SIZE][((int) form.b.getY() / SIZE)];
+//        int movec = MESH[(int) form.c.getX() / SIZE][((int) form.c.getY() / SIZE)];
+//        int moved = MESH[(int) form.d.getX() / SIZE][((int) form.d.getY() / SIZE)];
+    	while(form.a.getY() + MOVE < YMAX && form.b.getY() + MOVE < YMAX && form.c.getY() + MOVE < YMAX
+                && form.d.getY() + MOVE < YMAX) {
+    		int movea = MESH[(int) form.a.getX() / SIZE][((int) form.a.getY() / SIZE) + 1];
+            int moveb = MESH[(int) form.b.getX() / SIZE][((int) form.b.getY() / SIZE) + 1];
+            int movec = MESH[(int) form.c.getX() / SIZE][((int) form.c.getY() / SIZE) + 1];
+            int moved = MESH[(int) form.d.getX() / SIZE][((int) form.d.getY() / SIZE) + 1];
+            if (movea == 0 && movea == moveb && moveb == movec && movec == moved) {
+                form.a.setY(form.a.getY() + MOVE);
+                form.b.setY(form.b.getY() + MOVE);
+                form.c.setY(form.c.getY() + MOVE);
+                form.d.setY(form.d.getY() + MOVE);
+            }
+            }
+    	
+    }
     private void MoveTurn(Form form) {
         int f = form.form;
         Rectangle a = form.a;
@@ -493,6 +538,7 @@ public class Tetris extends Application {
     }
 
     private void MoveDown(Form form) {
+    	//moving down if down is full
         if (form.a.getY() == YMAX - SIZE || form.b.getY() == YMAX - SIZE || form.c.getY() == YMAX - SIZE
                 || form.d.getY() == YMAX - SIZE || moveA(form) || moveB(form) || moveC(form) || moveD(form)) {
             MESH[(int) form.a.getX() / SIZE][(int) form.a.getY() / SIZE] = 1;
@@ -507,7 +553,7 @@ public class Tetris extends Application {
             group.getChildren().addAll(a.a, a.b, a.c, a.d);
             moveOnKeyPress(a);
         }
-
+        //moving one block down if down is not full
         if (form.a.getY() + MOVE < YMAX && form.b.getY() + MOVE < YMAX && form.c.getY() + MOVE < YMAX
                 && form.d.getY() + MOVE < YMAX) {
             int movea = MESH[(int) form.a.getX() / SIZE][((int) form.a.getY() / SIZE) + 1];

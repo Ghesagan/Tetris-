@@ -42,7 +42,8 @@ public class Controller {
             }
         }
     }
-
+    
+    
     public static Form makeRect() {
         int block = (int) (Math.random() * 100);
         String name;
