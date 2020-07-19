@@ -113,6 +113,7 @@ public class Tetris extends Application {
 
                         if (game) {
                             MoveDown(object);
+                            score++;
                             scoretext.setText("Score: " + Integer.toString(score));
                             level.setText("Lines: " + Integer.toString(linesNo));
                         }
@@ -150,26 +151,51 @@ public class Tetris extends Application {
         });
     }
  
+    // drop the block all the way to the bottom
     private void HardDrop(Form form) {
-//    	int movea = MESH[(int) form.a.getX() / SIZE][((int) form.a.getY() / SIZE)];
-//        int moveb = MESH[(int) form.b.getX() / SIZE][((int) form.b.getY() / SIZE)];
-//        int movec = MESH[(int) form.c.getX() / SIZE][((int) form.c.getY() / SIZE)];
-//        int moved = MESH[(int) form.d.getX() / SIZE][((int) form.d.getY() / SIZE)];
-    	while(form.a.getY() + MOVE < YMAX && form.b.getY() + MOVE < YMAX && form.c.getY() + MOVE < YMAX
-                && form.d.getY() + MOVE < YMAX) {
-    		int movea = MESH[(int) form.a.getX() / SIZE][((int) form.a.getY() / SIZE) + 1];
-            int moveb = MESH[(int) form.b.getX() / SIZE][((int) form.b.getY() / SIZE) + 1];
-            int movec = MESH[(int) form.c.getX() / SIZE][((int) form.c.getY() / SIZE) + 1];
-            int moved = MESH[(int) form.d.getX() / SIZE][((int) form.d.getY() / SIZE) + 1];
-            if (movea == 0 && movea == moveb && moveb == movec && movec == moved) {
-                form.a.setY(form.a.getY() + MOVE);
-                form.b.setY(form.b.getY() + MOVE);
-                form.c.setY(form.c.getY() + MOVE);
-                form.d.setY(form.d.getY() + MOVE);
-            }
-            }
-    	
+    	int AYPeak = (int) form.a.getY()/SIZE;
+    	int BYPeak = (int) form.b.getY()/SIZE;
+    	int CYPeak = (int) form.c.getY()/SIZE;
+    	int DYPeak = (int) form.d.getY()/SIZE;
+    	// check if the block is already at its lowest point
+    	if (AYPeak == YMAX/SIZE - 1 || BYPeak == YMAX/SIZE - 1 || CYPeak == YMAX/SIZE - 1 || DYPeak == YMAX/SIZE - 1) {
+    		
+    	} else {
+    		// find where the first collision occur
+    		for (int i = 0; i < 23; i++) {
+    			if (AYPeak + i == YMAX/SIZE || MESH[(int) form.a.getX()/SIZE][AYPeak + i + 1] == 1) {
+    				form.a.setY((AYPeak + i)*SIZE);
+    				form.b.setY((BYPeak + i)*SIZE);
+    				form.c.setY((CYPeak + i)*SIZE);
+    				form.d.setY((DYPeak + i)*SIZE);
+    				break;
+    			} else if (BYPeak + i == YMAX/SIZE || MESH[(int) form.b.getX()/SIZE][BYPeak + i + 1] == 1){
+    				form.a.setY((AYPeak + i)*SIZE);
+    				form.b.setY((BYPeak + i)*SIZE);
+    				form.c.setY((CYPeak + i)*SIZE);
+    				form.d.setY((DYPeak + i)*SIZE);
+    				break;
+    			} else if (CYPeak + i == YMAX/SIZE || MESH[(int) form.c.getX()/SIZE][CYPeak + i + 1] == 1) {
+    				form.a.setY((AYPeak + i)*SIZE);
+    				form.b.setY((BYPeak + i)*SIZE);
+    				form.c.setY((CYPeak + i)*SIZE);
+    				form.d.setY((DYPeak + i)*SIZE);
+    				break;
+    			} else if (DYPeak + i == YMAX/SIZE || MESH[(int) form.d.getX()/SIZE][DYPeak + i + 1] == 1) {
+    				form.a.setY((AYPeak + i)*SIZE);
+    				form.b.setY((BYPeak + i)*SIZE);
+    				form.c.setY((CYPeak + i)*SIZE);
+    				form.d.setY((DYPeak + i)*SIZE);
+    				break;
+    			}
+    		}
+    		 MESH[(int) form.a.getX() / SIZE][(int) form.a.getY() / SIZE] = 1;
+             MESH[(int) form.b.getX() / SIZE][(int) form.b.getY() / SIZE] = 1;
+             MESH[(int) form.c.getX() / SIZE][(int) form.c.getY() / SIZE] = 1;
+             MESH[(int) form.d.getX() / SIZE][(int) form.d.getY() / SIZE] = 1;
+    	}
     }
+    
     private void MoveTurn(Form form) {
         int f = form.form;
         Rectangle a = form.a;
