@@ -157,43 +157,42 @@ public class Tetris extends Application {
     	int BYPeak = (int) form.b.getY()/SIZE;
     	int CYPeak = (int) form.c.getY()/SIZE;
     	int DYPeak = (int) form.d.getY()/SIZE;
-    	// check if the block is already at its lowest point
-    	if (AYPeak == YMAX/SIZE - 1 || BYPeak == YMAX/SIZE - 1 || CYPeak == YMAX/SIZE - 1 || DYPeak == YMAX/SIZE - 1) {
-    		
-    	} else {
-    		// find where the first collision occur
-    		for (int i = 0; i < 23; i++) {
-    			if (AYPeak + i == YMAX/SIZE || MESH[(int) form.a.getX()/SIZE][AYPeak + i + 1] == 1) {
-    				form.a.setY((AYPeak + i)*SIZE);
-    				form.b.setY((BYPeak + i)*SIZE);
-    				form.c.setY((CYPeak + i)*SIZE);
-    				form.d.setY((DYPeak + i)*SIZE);
-    				break;
-    			} else if (BYPeak + i == YMAX/SIZE || MESH[(int) form.b.getX()/SIZE][BYPeak + i + 1] == 1){
-    				form.a.setY((AYPeak + i)*SIZE);
-    				form.b.setY((BYPeak + i)*SIZE);
-    				form.c.setY((CYPeak + i)*SIZE);
-    				form.d.setY((DYPeak + i)*SIZE);
-    				break;
-    			} else if (CYPeak + i == YMAX/SIZE || MESH[(int) form.c.getX()/SIZE][CYPeak + i + 1] == 1) {
-    				form.a.setY((AYPeak + i)*SIZE);
-    				form.b.setY((BYPeak + i)*SIZE);
-    				form.c.setY((CYPeak + i)*SIZE);
-    				form.d.setY((DYPeak + i)*SIZE);
-    				break;
-    			} else if (DYPeak + i == YMAX/SIZE || MESH[(int) form.d.getX()/SIZE][DYPeak + i + 1] == 1) {
-    				form.a.setY((AYPeak + i)*SIZE);
-    				form.b.setY((BYPeak + i)*SIZE);
-    				form.c.setY((CYPeak + i)*SIZE);
-    				form.d.setY((DYPeak + i)*SIZE);
-    				break;
-    			}
+    	// find where the first collision occur or if the first collision is the bottom of the MESH
+    	for (int i = 0; i < 23; i++) {
+    		if (AYPeak + i == YMAX/SIZE - 1 || MESH[(int) form.a.getX()/SIZE][AYPeak + i + 1] == 1) {
+    			form.a.setY((AYPeak + i)*SIZE);
+    			form.b.setY((BYPeak + i)*SIZE);
+    			form.c.setY((CYPeak + i)*SIZE);
+    			form.d.setY((DYPeak + i)*SIZE);
+    			score += i;
+    			break;
+    		} else if (BYPeak + i == YMAX/SIZE - 1 || MESH[(int) form.b.getX()/SIZE][BYPeak + i + 1] == 1){
+    			form.a.setY((AYPeak + i)*SIZE);
+    			form.b.setY((BYPeak + i)*SIZE);
+    			form.c.setY((CYPeak + i)*SIZE);
+    			form.d.setY((DYPeak + i)*SIZE);
+    			score += i;
+    			break;
+    		} else if (CYPeak + i == YMAX/SIZE - 1 || MESH[(int) form.c.getX()/SIZE][CYPeak + i + 1] == 1) {
+    			form.a.setY((AYPeak + i)*SIZE);
+    			form.b.setY((BYPeak + i)*SIZE);
+    			form.c.setY((CYPeak + i)*SIZE);
+    			form.d.setY((DYPeak + i)*SIZE);
+    			score += i;
+    			break;
+    		} else if (DYPeak + i == YMAX/SIZE - 1 || MESH[(int) form.d.getX()/SIZE][DYPeak + i + 1] == 1) {
+    			form.a.setY((AYPeak + i)*SIZE);
+    			form.b.setY((BYPeak + i)*SIZE);
+    			form.c.setY((CYPeak + i)*SIZE);
+    			form.d.setY((DYPeak + i)*SIZE);
+    			score += i;
+    			break;
     		}
-    		 MESH[(int) form.a.getX() / SIZE][(int) form.a.getY() / SIZE] = 1;
-             MESH[(int) form.b.getX() / SIZE][(int) form.b.getY() / SIZE] = 1;
-             MESH[(int) form.c.getX() / SIZE][(int) form.c.getY() / SIZE] = 1;
-             MESH[(int) form.d.getX() / SIZE][(int) form.d.getY() / SIZE] = 1;
     	}
+    	MESH[(int) form.a.getX() / SIZE][(int) form.a.getY() / SIZE] = 1;
+    	MESH[(int) form.b.getX() / SIZE][(int) form.b.getY() / SIZE] = 1;
+    	MESH[(int) form.c.getX() / SIZE][(int) form.c.getY() / SIZE] = 1;
+    	MESH[(int) form.d.getX() / SIZE][(int) form.d.getY() / SIZE] = 1;
     }
     
     private void MoveTurn(Form form) {
