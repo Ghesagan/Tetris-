@@ -32,6 +32,8 @@ public class Tetris extends Application {
     private static boolean game = true;
     private static Form nextObj = Controller.makeRect();
     private static int linesNo = 0;
+    private static Form[] heldShape = new Form[1];
+    private static Form shownext = null;
 
     public static void main(String[] args) {
         launch(args);
@@ -58,12 +60,6 @@ public class Tetris extends Application {
         	group.getChildren().add(gridline);
         }
         
-        
-        
-        
-        
-        
-        
         Text scoretext = new Text("Score: ");
         scoretext.setStyle("-fx-font: 20 arial;");
         scoretext.setY(50);
@@ -74,13 +70,37 @@ public class Tetris extends Application {
         level.setY(100);
         level.setX(XMAX + 5);
         level.setFill(Color.GREEN);
-        group.getChildren().addAll(scoretext, line, level);
-
+        Text nextblock = new Text("Next Block!");
+        nextblock.setStyle("-fx-font: 20 arial;");
+        nextblock.setY(150);
+        nextblock.setX(XMAX + 5);
+        nextblock.setFill(Color.WHITE);
+        
+        
+        group.getChildren().addAll(scoretext, line, level, nextblock);
+        
+        
+        
         Form a = nextObj;
         group.getChildren().addAll(a.a, a.b, a.c, a.d);
         moveOnKeyPress(a);
         object = a;
         nextObj = Controller.makeRect();
+        
+        
+        //first time we show the next playable block
+        shownext = Controller.CopyForm(nextObj);
+        shownext.a.setX(shownext.a.getX()+ 9*SIZE);
+        shownext.b.setX(shownext.b.getX()+ 9*SIZE);
+        shownext.c.setX(shownext.c.getX()+ 9*SIZE);
+        shownext.d.setX(shownext.d.getX()+ 9*SIZE);
+        shownext.a.setY(shownext.a.getY()+7*SIZE);
+        shownext.b.setY(shownext.b.getY()+7*SIZE);
+        shownext.c.setY(shownext.c.getY()+7*SIZE);
+        shownext.d.setY(shownext.d.getY()+7*SIZE);
+        group.getChildren().addAll(shownext.a,shownext.b,shownext.c,shownext.d);
+        
+        
         stage.setScene(scene);
         stage.setTitle("T E T R I S");
         stage.show();
@@ -123,7 +143,13 @@ public class Tetris extends Application {
         };
         fall.schedule(task, 0, 300);
     }
-
+    
+//    private Form CopyForm(Form f1) {
+//    	Rectangle a = new Rectangle();
+//    	Form f = new Form(f1.a,f1.b, f1.c, f1.d, f1.getName());
+//    	return f;
+//    	
+//    }
     private void moveOnKeyPress(Form form) {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -142,15 +168,62 @@ public class Tetris extends Application {
                     case UP:
                         MoveTurn(form);
                         break;
-                        
                     case CONTROL:
                     	HardDrop(form);
+                    	break;
+                    case B:
+                    	MeshWipe(group);
+                    	break;
+                    case H:
+                    	//something
+                    	HoldBlock(form);
                     	break;
                 }
             }
         });
     }
+    
+    private void HoldBlock(Form form) {
+    	//maybe: delete orginal make deep copy which we store in the array, might
+    	if(heldShape[0] == null) {
+    		heldShape[0] = form;
+    		//erase the form some how
+    		//the add a new form to the game so it can contiune 
+    	}
+    	else {
+    		//there is already a heldshape so we need to swap
+    		Form temp = heldShape[0];
+    		form = heldShape[0];
+    		form = temp;
+    	}
+    }
  
+    //current issue, it also erases the new shape on the screen but not in the mesh
+    private void MeshWipe(Pane group) {
+    	//fuck my life, this game is trash...
+    	ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
+    	for (Node node : group.getChildren()) {
+            if (node instanceof Rectangle) {
+            	Rectangle r = (Rectangle) node;
+            	if(!(r.equals(nextObj.a) || r.equals(nextObj.b) || 
+            			r.equals(nextObj.c) || r.equals(nextObj.d)) ){
+            		rects.add((Rectangle)node);
+            	}
+            	
+            }
+                
+        }
+    	for (Rectangle r : rects) { 
+
+    			MESH[(int) r.getX() / SIZE][(int) r.getY() / SIZE] = 0;
+    			group.getChildren().remove(r);
+
+
+    	}
+    	rects.clear();
+    }
+    
+    
     // drop the block all the way to the bottom
     private void HardDrop(Form form) {
     	int AYPeak = (int) form.a.getY()/SIZE;
@@ -574,6 +647,24 @@ public class Tetris extends Application {
 
             Form a = nextObj;
             nextObj = Controller.makeRect();
+            
+          //remove previous block then show the next playable block
+            if(shownext != null) {
+            	group.getChildren().removeAll(shownext.a,shownext.b,shownext.c,shownext.d);
+            }
+            shownext = Controller.CopyForm(nextObj);
+            shownext.a.setX(shownext.a.getX()+ 9*SIZE);
+            shownext.b.setX(shownext.b.getX()+ 9*SIZE);
+            shownext.c.setX(shownext.c.getX()+ 9*SIZE);
+            shownext.d.setX(shownext.d.getX()+ 9*SIZE);
+            shownext.a.setY(shownext.a.getY()+7*SIZE);
+            shownext.b.setY(shownext.b.getY()+7*SIZE);
+            shownext.c.setY(shownext.c.getY()+7*SIZE);
+            shownext.d.setY(shownext.d.getY()+7*SIZE);
+            group.getChildren().addAll(shownext.a,shownext.b,shownext.c,shownext.d);
+
+            
+            
             object = a;
             group.getChildren().addAll(a.a, a.b, a.c, a.d);
             moveOnKeyPress(a);
