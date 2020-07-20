@@ -44,6 +44,21 @@ public class Controller {
     }
     
     
+    public static Form CopyForm(Form form) {
+    	Rectangle a = new Rectangle(SIZE-1, SIZE-1), b = new Rectangle(SIZE-1, SIZE-1), c = new Rectangle(SIZE-1, SIZE-1),
+                d = new Rectangle(SIZE-1, SIZE-1);
+    	a.setX(form.a.getX());
+    	b.setX(form.b.getX());
+    	c.setX(form.c.getX());
+    	d.setX(form.d.getX());
+    	a.setY(form.a.getY());
+    	b.setY(form.b.getY());
+    	c.setY(form.c.getY());
+    	d.setY(form.d.getY());
+    	
+		Form copy = new Form(a,b,c,d,form.getName());
+		return copy;
+	}
     public static Form makeRect() {
         int block = (int) (Math.random() * 100);
         String name;
@@ -91,11 +106,11 @@ public class Controller {
             d.setX(XMAX / 2 + SIZE);
             name = "t";
         } else if (block < 90) {
-            a.setX(XMAX / 2 + SIZE);
-            b.setX(XMAX / 2);
-            c.setX(XMAX / 2 + SIZE);
+            a.setX(XMAX / 2);
+            b.setX(XMAX / 2 - SIZE);
+            c.setX(XMAX / 2);
             c.setY(SIZE);
-            d.setX(XMAX / 2 + SIZE + SIZE);
+            d.setX(XMAX / 2 + SIZE);
             d.setY(SIZE);
             name = "z";
         } else {

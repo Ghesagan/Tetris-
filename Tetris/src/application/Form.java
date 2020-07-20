@@ -73,6 +73,5 @@ public class Form {
 			form = 1;
 		}
 	}
-	
 
 }
