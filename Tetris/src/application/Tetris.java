@@ -33,7 +33,7 @@ public class Tetris extends Application {
     private static Form nextObj = Controller.makeRect();
     private static int linesNo = 0;
     private static Form[] heldShape = new Form[1];
-    private static Form shownext = null;
+    private static Form showNext = null;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,7 +48,7 @@ public class Tetris extends Application {
         Line line = new Line(XMAX, 0, XMAX, YMAX);
         line.setStroke(Color.WHITE);
         
-        // To make the gridlines
+        // To make the grid lines
         for(int i = 0; i < 12; i++) {
         	Line gridline = new Line(SIZE*i+SIZE, 0, SIZE*i +SIZE, YMAX);
         	gridline.setStroke(Color.WHITE);
@@ -89,16 +89,16 @@ public class Tetris extends Application {
         
         
         //first time we show the next playable block
-        shownext = Controller.CopyForm(nextObj);
-        shownext.a.setX(shownext.a.getX()+ 9*SIZE);
-        shownext.b.setX(shownext.b.getX()+ 9*SIZE);
-        shownext.c.setX(shownext.c.getX()+ 9*SIZE);
-        shownext.d.setX(shownext.d.getX()+ 9*SIZE);
-        shownext.a.setY(shownext.a.getY()+7*SIZE);
-        shownext.b.setY(shownext.b.getY()+7*SIZE);
-        shownext.c.setY(shownext.c.getY()+7*SIZE);
-        shownext.d.setY(shownext.d.getY()+7*SIZE);
-        group.getChildren().addAll(shownext.a,shownext.b,shownext.c,shownext.d);
+        showNext = Controller.CopyForm(nextObj);
+        showNext.a.setX(showNext.a.getX()+ 9*SIZE);
+        showNext.b.setX(showNext.b.getX()+ 9*SIZE);
+        showNext.c.setX(showNext.c.getX()+ 9*SIZE);
+        showNext.d.setX(showNext.d.getX()+ 9*SIZE);
+        showNext.a.setY(showNext.a.getY()+7*SIZE);
+        showNext.b.setY(showNext.b.getY()+7*SIZE);
+        showNext.c.setY(showNext.c.getY()+7*SIZE);
+        showNext.d.setY(showNext.d.getY()+7*SIZE);
+        group.getChildren().addAll(showNext.a,showNext.b,showNext.c,showNext.d);
         
         
         stage.setScene(scene);
@@ -184,14 +184,14 @@ public class Tetris extends Application {
     }
     
     private void HoldBlock(Form form) {
-    	//maybe: delete orginal make deep copy which we store in the array, might
+    	//maybe: delete original make deep copy which we store in the array, might
     	if(heldShape[0] == null) {
     		heldShape[0] = form;
     		//erase the form some how
-    		//the add a new form to the game so it can contiune 
+    		//the add a new form to the game so it can continue 
     	}
     	else {
-    		//there is already a heldshape so we need to swap
+    		//there is already a held shape so we need to swap
     		Form temp = heldShape[0];
     		form = heldShape[0];
     		form = temp;
@@ -591,7 +591,8 @@ public class Tetris extends Application {
 
                 for (Node node : newrects) {
                     Rectangle a = (Rectangle) node;
-                    if (a.getY() < lines.get(0) * SIZE) {
+                    // when adding new rectangles back in make sure to not add back in the rectangles in showNext
+                    if (a.getY() < lines.get(0) * SIZE && a.getX() < XMAX) {
                         MESH[(int) a.getX() / SIZE][(int) a.getY() / SIZE] = 0;
                         a.setY(a.getY() + SIZE);
                     }
@@ -649,19 +650,19 @@ public class Tetris extends Application {
             nextObj = Controller.makeRect();
             
           //remove previous block then show the next playable block
-            if(shownext != null) {
-            	group.getChildren().removeAll(shownext.a,shownext.b,shownext.c,shownext.d);
+            if(showNext != null) {
+            	group.getChildren().removeAll(showNext.a,showNext.b,showNext.c,showNext.d);
             }
-            shownext = Controller.CopyForm(nextObj);
-            shownext.a.setX(shownext.a.getX()+ 9*SIZE);
-            shownext.b.setX(shownext.b.getX()+ 9*SIZE);
-            shownext.c.setX(shownext.c.getX()+ 9*SIZE);
-            shownext.d.setX(shownext.d.getX()+ 9*SIZE);
-            shownext.a.setY(shownext.a.getY()+7*SIZE);
-            shownext.b.setY(shownext.b.getY()+7*SIZE);
-            shownext.c.setY(shownext.c.getY()+7*SIZE);
-            shownext.d.setY(shownext.d.getY()+7*SIZE);
-            group.getChildren().addAll(shownext.a,shownext.b,shownext.c,shownext.d);
+            showNext = Controller.CopyForm(nextObj);
+            showNext.a.setX(showNext.a.getX()+ 9*SIZE);
+            showNext.b.setX(showNext.b.getX()+ 9*SIZE);
+            showNext.c.setX(showNext.c.getX()+ 9*SIZE);
+            showNext.d.setX(showNext.d.getX()+ 9*SIZE);
+            showNext.a.setY(showNext.a.getY()+7*SIZE);
+            showNext.b.setY(showNext.b.getY()+7*SIZE);
+            showNext.c.setY(showNext.c.getY()+7*SIZE);
+            showNext.d.setY(showNext.d.getY()+7*SIZE);
+            group.getChildren().addAll(showNext.a,showNext.b,showNext.c,showNext.d);
 
             
             
