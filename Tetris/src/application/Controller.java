@@ -59,6 +59,69 @@ public class Controller {
 		Form copy = new Form(a,b,c,d,form.getName());
 		return copy;
 	}
+    
+    public static void SetUpRelativeXY(Form copy, String name) {
+    	if(name == "j") {
+    		copy.a.setX(XMAX / 2 - SIZE);
+    		copy.b.setX(XMAX / 2 - SIZE);
+    		copy.b.setY(SIZE);
+    		copy.c.setX(XMAX / 2);
+    		copy.c.setY(SIZE);
+    		copy.d.setX(XMAX / 2 + SIZE);
+    		copy.d.setY(SIZE);
+    	}
+    	if(name == "l") {
+    		copy.a.setX(XMAX / 2 + SIZE);
+    		copy.b.setX(XMAX / 2 - SIZE);
+    		copy.b.setY(SIZE);
+    		copy.c.setX(XMAX / 2);
+    		copy.c.setY(SIZE);
+    		copy.d.setX(XMAX / 2 + SIZE);
+    		copy.d.setY(SIZE);
+    	}
+    	if(name == "o") {
+    		copy.a.setX(XMAX / 2 - SIZE);
+    		copy.b.setX(XMAX / 2);
+    		copy.c.setX(XMAX / 2 - SIZE);
+    		copy.c.setY(SIZE);
+    		copy.d.setX(XMAX / 2);
+    		copy.d.setY(SIZE);
+
+    	}
+    	if(name == "s") {
+    		copy.a.setX(XMAX / 2 + SIZE);
+    		copy.b.setX(XMAX / 2);
+    		copy.c.setX(XMAX / 2);
+    		copy.c.setY(SIZE);
+    		copy.d.setX(XMAX / 2 - SIZE);
+    		copy.d.setY(SIZE);
+    	}		
+    	if(name == "t") {
+    		copy.a.setX(XMAX / 2 - SIZE);
+    		copy.b.setX(XMAX / 2);
+            copy.c.setX(XMAX / 2);
+            copy.c.setY(SIZE);
+            copy.d.setX(XMAX / 2 + SIZE);
+
+    	}
+    	if(name == "z") {
+    		copy.a.setX(XMAX / 2);
+    		copy.b.setX(XMAX / 2 - SIZE);
+    		copy.c.setX(XMAX / 2);
+    		copy.c.setY(SIZE);
+    		copy.d.setX(XMAX / 2 + SIZE);
+    		copy.d.setY(SIZE);
+
+    	}
+    	if(name == "i") {
+    		copy.a.setX(XMAX / 2 - SIZE - SIZE);
+    		copy.b.setX(XMAX / 2 - SIZE);
+    		copy.c.setX(XMAX / 2);
+    		copy.d.setX(XMAX / 2 + SIZE);
+
+    	}
+    }
+    
     public static Form makeRect() {
         int block = (int) (Math.random() * 100);
         String name;
@@ -122,4 +185,6 @@ public class Controller {
         }
         return new Form(a, b, c, d, name);
     }
+
+	
 }
