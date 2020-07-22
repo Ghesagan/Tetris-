@@ -69,6 +69,13 @@ public class Controller {
     		copy.c.setY(SIZE);
     		copy.d.setX(XMAX / 2 + SIZE);
     		copy.d.setY(SIZE);
+//    		a.setX(XMAX / 2 - SIZE);
+//            b.setX(XMAX / 2 - SIZE);
+//            b.setY(SIZE);
+//            c.setX(XMAX / 2);
+//            c.setY(SIZE);
+//            d.setX(XMAX / 2 + SIZE);
+//            d.setY(SIZE);
     	}
     	if(name == "l") {
     		copy.a.setX(XMAX / 2 + SIZE);

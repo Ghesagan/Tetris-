@@ -3,6 +3,7 @@ package application;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Application;
@@ -21,24 +22,24 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Tetris extends Application {
-    // The variables
-    public static final int MOVE = 25;
-    public static final int SIZE = 25;
-    public static int XMAX = SIZE * 12;
-    public static int YMAX = SIZE * 24;
-    public static int[][] MESH = new int[XMAX / SIZE][YMAX / SIZE];
-    private static Pane group = new Pane();
-    private static Form object;
-    private static Scene scene = new Scene(group, XMAX + 150, YMAX, Color.BLACK);
-    public static int score = 0;
-    private static int top = 0;
-    private static boolean game = true;
-    private static Form nextObj = Controller.makeRect();
-    private static int linesNo = 0;
-    private static Form[] heldShape = new Form[1];
-    private static Form showNext = null;
-    private static Form heldBlock = null;
-	private static int meshWipeCount = 3;
+	// The variables
+	public static final int MOVE = 25;
+	public static final int SIZE = 25;
+	public static int XMAX = SIZE * 12;
+	public static int YMAX = SIZE * 24;
+	public static int[][] MESH = new int[XMAX / SIZE][YMAX / SIZE];
+	private static Pane group = new Pane();
+	private static Form object;
+	private static Scene scene = new Scene(group, XMAX + 150, YMAX, Color.BLACK);
+	public static int score = 0;
+	private static int top = 0;
+	private static boolean game = true;
+	private static Form nextObj = Controller.makeRect();
+	private static int linesNo = 0;
+	private static Form[] heldShape = new Form[1];
+	private static Form showNext = null;
+	private static Form heldBlock = null;
+	private static int meshWipeCount = 2;
 	private static Text meshWipe;
 
 	public static void main(String[] args) {
@@ -47,8 +48,8 @@ public class Tetris extends Application {
 	//Two things to do, one add file to root project directory, two make a double thread in main should it give errors 
 	MediaPlayer mediaPlayer;
 	public void music() {
-		String s = "";
-				//"C:\Users\Clauz\Music\Tetris 99 - Main Theme";
+		String s = "Tetris 99 - Main Theme";
+		//"C:\Users\Clauz\Music\Tetris 99 - Main Theme";
 		Media h = new Media(Paths.get(s).toUri().toString());
 		mediaPlayer = new MediaPlayer(h);
 		mediaPlayer.play();;
@@ -62,108 +63,108 @@ public class Tetris extends Application {
 		//music();
 		Line line = new Line(XMAX, 0, XMAX, YMAX);
 		line.setStroke(Color.WHITE);
-       
-        // To make the grid lines
-        for(int i = 0; i < 12; i++) {
-        	Line gridline = new Line(SIZE*i+SIZE, 0, SIZE*i +SIZE, YMAX);
-        	gridline.setStroke(Color.WHITE);
-        	group.getChildren().add(gridline);
-        }
-        for(int i = 0; i < 24; i++) {
-        	Line gridline = new Line(0, SIZE*i+SIZE, XMAX, SIZE*i+SIZE);
-        	gridline.setStroke(Color.WHITE);
-        	group.getChildren().add(gridline);
-        }
-        
-        Text scoretext = new Text("Score: ");
-        scoretext.setStyle("-fx-font: 20 arial;");
-        scoretext.setY(50);
-        scoretext.setX(XMAX + 5);
-        scoretext.setFill(Color.WHITE);
-        Text level = new Text("Lines: ");
-        level.setStyle("-fx-font: 20 arial;");
-        level.setY(100);
-        level.setX(XMAX + 5);
-        level.setFill(Color.GREEN);
-        Text nextblock = new Text("Next Block!");
-        nextblock.setStyle("-fx-font: 20 arial;");
-        nextblock.setY(150);
-        nextblock.setX(XMAX + 5);
-        nextblock.setFill(Color.WHITE);
-        meshWipe = new Text(Integer.toString(meshWipeCount) + " Grid Wipes left!");
+
+		// To make the grid lines
+		for(int i = 0; i < 12; i++) {
+			Line gridline = new Line(SIZE*i+SIZE, 0, SIZE*i +SIZE, YMAX);
+			gridline.setStroke(Color.WHITE);
+			group.getChildren().add(gridline);
+		}
+		for(int i = 0; i < 24; i++) {
+			Line gridline = new Line(0, SIZE*i+SIZE, XMAX, SIZE*i+SIZE);
+			gridline.setStroke(Color.WHITE);
+			group.getChildren().add(gridline);
+		}
+
+		Text scoretext = new Text("Score: ");
+		scoretext.setStyle("-fx-font: 20 arial;");
+		scoretext.setY(50);
+		scoretext.setX(XMAX + 5);
+		scoretext.setFill(Color.WHITE);
+		Text level = new Text("Lines: ");
+		level.setStyle("-fx-font: 20 arial;");
+		level.setY(100);
+		level.setX(XMAX + 5);
+		level.setFill(Color.GREEN);
+		Text nextblock = new Text("Next Block!");
+		nextblock.setStyle("-fx-font: 20 arial;");
+		nextblock.setY(150);
+		nextblock.setX(XMAX + 5);
+		nextblock.setFill(Color.WHITE);
+		meshWipe = new Text(Integer.toString(meshWipeCount) + " Grid Wipes left!");
 		meshWipe.setStyle("-fx-font: 15 arial;");
 		meshWipe.setY(YMAX-25);
 		meshWipe.setX(XMAX + 5);
 		meshWipe.setFill(Color.WHITE);
-        
-        group.getChildren().addAll(scoretext, line, level, nextblock, meshWipe);
-        
-        
-        
-        Form a = nextObj;
-        group.getChildren().addAll(a.a, a.b, a.c, a.d);
-        moveOnKeyPress(a);
-        object = a;
-        nextObj = Controller.makeRect();
-        
-        
-        //first time we show the next playable block
-        showNext = Controller.CopyForm(nextObj);
-        showNext.a.setX(showNext.a.getX()+ 9*SIZE);
-        showNext.b.setX(showNext.b.getX()+ 9*SIZE);
-        showNext.c.setX(showNext.c.getX()+ 9*SIZE);
-        showNext.d.setX(showNext.d.getX()+ 9*SIZE);
-        showNext.a.setY(showNext.a.getY()+7*SIZE);
-        showNext.b.setY(showNext.b.getY()+7*SIZE);
-        showNext.c.setY(showNext.c.getY()+7*SIZE);
-        showNext.d.setY(showNext.d.getY()+7*SIZE);
-        
-        group.getChildren().addAll(showNext.a,showNext.b,showNext.c,showNext.d);
-        
-        
-        stage.setScene(scene);
-        stage.setTitle("T E T R I S");
-        stage.show();
-    
 
-        Timer fall = new Timer();
-        TimerTask task = new TimerTask() {
-            public void run() {
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        if (object.a.getY() == 0 || object.b.getY() == 0 || object.c.getY() == 0
-                                || object.d.getY() == 0)
-                            top++;
-                        else
-                            top = 0;
+		group.getChildren().addAll(scoretext, line, level, nextblock, meshWipe);
 
-                        if (top == 2) {
-                            // GAME OVER
-                            Text over = new Text("GAME OVER");
-                            over.setFill(Color.RED);
-                            over.setStyle("-fx-font: 70 arial;");
-                            over.setY(250);
-                            over.setX(10);
-                            group.getChildren().add(over);
-                            game = false;
-                        }
-                        // Exit
-                        if (top == 15) {
-                            System.exit(0);
-                        }
 
-                        if (game) {
-                            MoveDown(object);
-                            score++;
-                            scoretext.setText("Score: " + Integer.toString(score));
-                            level.setText("Lines: " + Integer.toString(linesNo));
-                        }
-                    }
-                });
-            }
-        };
-        fall.schedule(task, 0, 300);
-    }
+
+		Form a = nextObj;
+		group.getChildren().addAll(a.a, a.b, a.c, a.d);
+		moveOnKeyPress(a);
+		object = a;
+		nextObj = Controller.makeRect();
+
+
+		//first time we show the next playable block
+		showNext = Controller.CopyForm(nextObj);
+		showNext.a.setX(showNext.a.getX()+ 9*SIZE);
+		showNext.b.setX(showNext.b.getX()+ 9*SIZE);
+		showNext.c.setX(showNext.c.getX()+ 9*SIZE);
+		showNext.d.setX(showNext.d.getX()+ 9*SIZE);
+		showNext.a.setY(showNext.a.getY()+7*SIZE);
+		showNext.b.setY(showNext.b.getY()+7*SIZE);
+		showNext.c.setY(showNext.c.getY()+7*SIZE);
+		showNext.d.setY(showNext.d.getY()+7*SIZE);
+
+		group.getChildren().addAll(showNext.a,showNext.b,showNext.c,showNext.d);
+
+
+		stage.setScene(scene);
+		stage.setTitle("T E T R I S");
+		stage.show();
+
+
+		Timer fall = new Timer();
+		TimerTask task = new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						if (object.a.getY() == 0 || object.b.getY() == 0 || object.c.getY() == 0
+								|| object.d.getY() == 0)
+							top++;
+						else
+							top = 0;
+
+						if (top == 2) {
+							// GAME OVER
+							Text over = new Text("GAME OVER");
+							over.setFill(Color.RED);
+							over.setStyle("-fx-font: 70 arial;");
+							over.setY(250);
+							over.setX(10);
+							group.getChildren().add(over);
+							game = false;
+						}
+						// Exit
+						if (top == 15) {
+							System.exit(0);
+						}
+
+						if (game) {
+							MoveDown(object);
+							score++;
+							scoretext.setText("Score: " + Integer.toString(score));
+							level.setText("Lines: " + Integer.toString(linesNo));
+						}
+					}
+				});
+			}
+		};
+		fall.schedule(task, 0, 300);
+	}
 
 
 	private void moveOnKeyPress(Form form) {
@@ -198,29 +199,99 @@ public class Tetris extends Application {
 					//something
 					HoldBlock(form, group);
 					break;
+				case T:
+					//just to test the method
+					AddRow(group);
 				}
 			}
 		});
 	}
+	//has the same bug as the rest if the object in play is moving then its rectangles become invisable note, only happens when I call teh pushUp method 
+	private void AddRow(Pane group) {
+		//we are going to make a auxillary funcion that pushes all the exsiting blocks up 
+		PushUpBlocks(group);
+		//we have a empty row at the bottom of the screen that needs to be almost filled
+		Random rand = new Random();
+		int leaveEmpty = rand.nextInt(XMAX/SIZE); //yes?
+		for(int i =0; i<XMAX/SIZE; i++) {
+			if(i != leaveEmpty) {
+				MESH[i][YMAX/SIZE-1] = 1;
+				Rectangle r = new Rectangle(SIZE-1, SIZE-1);// just to make the blocks look more like the other blocks
+				r.setFill(Color.WHITESMOKE);
+				r.setX(i*SIZE);
+				r.setY(23*SIZE);
+				group.getChildren().add(r);
+			}
+		}
+		
+	}
+	private void PushUpBlocks(Pane pane) {
+		ArrayList<Node> rects = new ArrayList<Node>();
+		for (Node node : pane.getChildren()) {
+			if (node instanceof Rectangle)
+				if((((Rectangle) node).getX()<=XMAX && ((Rectangle) node).getX()<=YMAX)){ 
+					if((((Rectangle) node).getX() == object.a.getX() && ((Rectangle) node).getY() == object.a.getY())
+					|| (((Rectangle) node).getX() == object.b.getX() && ((Rectangle) node).getY() == object.b.getY())
+					|| (((Rectangle) node).getX() == object.c.getX() && ((Rectangle) node).getY() == object.c.getY())
+					|| ((Rectangle) node).getX() == object.d.getX() && ((Rectangle) node).getY() == object.d.getY()) {
+						//do nothing because we want to keep the object in play on the screen
+					}
+					else {
+						rects.add(node);
+					}
+				}				
+		}
 
+		for (Node n : rects) {
+			Rectangle a = (Rectangle) n;
+			MESH[(int) a.getX() / SIZE][(int) a.getY() / SIZE] = 0;
+			pane.getChildren().remove(a);
+		}
+		for (Node n : rects) {
+			Rectangle a = (Rectangle) n;
+			MESH[(int) a.getX() / SIZE][(int) a.getY() / SIZE - 1] = 1;
+			a.setY(a.getY()-SIZE);//draw the rectangle on square up
+			pane.getChildren().add(a);
+		}
+		rects.clear();
+		
+	}
 	private void HoldBlock(Form form, Pane group) {
 		//maybe: delete orginal make deep copy which we store in the array, might
 		if(heldShape[0] == null) {
 			//erase form after making a copy
 			Form copy = Controller.CopyForm(form);
-			MESH[(int) form.a.getX() / SIZE][(int) form.a.getY() / SIZE] = 0;
-			MESH[(int) form.b.getX() / SIZE][(int) form.b.getY() / SIZE] = 0;
-			MESH[(int) form.c.getX() / SIZE][(int) form.c.getY() / SIZE] = 0;
-			MESH[(int) form.d.getX() / SIZE][(int) form.d.getY() / SIZE] = 0;
 			group.getChildren().removeAll(form.a,form.b,form.c,form.d);
+
+			//creating the new nextObj and setting object equal to the old nextObj
+			Form a = nextObj;
+			nextObj = Controller.makeRect();
+			object = a;
+			group.getChildren().addAll(a.a, a.b, a.c, a.d);
+			moveOnKeyPress(a);
+			
+			//updating the showNext block 
+			if(showNext != null) {
+				group.getChildren().removeAll(showNext.a,showNext.b,showNext.c,showNext.d);
+			}
+			showNext = Controller.CopyForm(nextObj);
+			showNext.a.setX(showNext.a.getX()+ 9*SIZE);
+			showNext.b.setX(showNext.b.getX()+ 9*SIZE);
+			showNext.c.setX(showNext.c.getX()+ 9*SIZE);
+			showNext.d.setX(showNext.d.getX()+ 9*SIZE);
+			showNext.a.setY(showNext.a.getY()+7*SIZE);
+			showNext.b.setY(showNext.b.getY()+7*SIZE);
+			showNext.c.setY(showNext.c.getY()+7*SIZE);
+			showNext.d.setY(showNext.d.getY()+7*SIZE);
+			group.getChildren().addAll(showNext.a,showNext.b,showNext.c,showNext.d);
+
 			heldShape[0]=copy;
 
 			//show the held shape
 			if(heldBlock != null) {
 				group.getChildren().removeAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d);
 			}
-			//work in progress
-			heldBlock = copy;
+			//work in progress			
 			Controller.SetUpRelativeXY(copy, copy.getName());
 			heldBlock.a.setX(heldBlock.a.getX()+9*SIZE);
 			heldBlock.b.setX(heldBlock.b.getX()+9*SIZE);
@@ -230,6 +301,8 @@ public class Tetris extends Application {
 			heldBlock.b.setY(heldBlock.b.getY()+9*SIZE);
 			heldBlock.c.setY(heldBlock.c.getY()+9*SIZE);
 			heldBlock.d.setY(heldBlock.d.getY()+9*SIZE);
+			
+			
 			group.getChildren().addAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d);
 			//the add a new form to the game so it can contiune 
 		}
@@ -240,39 +313,35 @@ public class Tetris extends Application {
 			form = temp;
 		}
 	}
-
+	
 	//current issue, it also erases the new shape on the screen but not in the mesh
 	private void MeshWipe(Pane group) {
 		ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 		for (Node node : group.getChildren()) {
 			if (node instanceof Rectangle) {
 				Rectangle r = (Rectangle) node;
-				if(r.getX()<=XMAX && r.getX()<=YMAX
-						//(r.equals(nextObj.a) || r.equals(nextObj.b) || 
-						//r.equals(nextObj.c) || r.equals(nextObj.d))
-						){
+				if((r.getX()<=XMAX && r.getX()<=YMAX)){
+					if((r.getX() == object.a.getX() &&  r.getY() == object.a.getY())
+					|| (r.getX() == object.b.getX() && r.getY() == object.b.getY())
+					|| (r.getX() == object.c.getX() && r.getY() == object.c.getY())
+					|| (r.getY() == object.d.getY() && r.getY() == object.d.getY())) {
+						//do nothing because we want to keep the shape that is in play.
+				}else {
 					rects.add(r);
+				}
 				}
 
 			}
 
 		}
 		for (Rectangle r : rects) { 
-
 			MESH[(int) r.getX() / SIZE][(int) r.getY() / SIZE] = 0;
 			group.getChildren().remove(r);
-
-
 		}
 		rects.clear();
-		//this way takes too long to wipe and you get a game over
-		//		for (int i = 0; i < MESH[0].length; i++) {
-		//			for (int j = 0; j < MESH.length; j++) {
-		//				MESH[j][i] = 1;
-		//			}
-		//		}
-		//		RemoveRows(group);
-
+	}
+	private void DeleteTop4(Pane group) {
+		//idea: someday.. if Chandler feels like doing he can.
 	}
 
 
@@ -619,8 +688,7 @@ public class Tetris extends Application {
 					full++;
 			}
 			if (full == MESH.length)
-				lines.add(i);
-			//lines.add(i + lines.size());
+				lines.add(i); //add the x cord of the line to the list
 			full = 0;
 		}
 		if (lines.size() > 0)
