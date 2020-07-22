@@ -36,6 +36,7 @@ public class Tetris extends Application {
 	private static boolean game = true;
 	private static Form nextObj = Controller.makeRect();
 	private static int linesNo = 0;
+	private static int linesNoSince = 0;
 	private static Form[] heldShape = new Form[1];
 	private static Form showNext = null;
 	private static Form heldBlock = null;
@@ -159,6 +160,7 @@ public class Tetris extends Application {
 						}
 
 						if (game) {
+							
 							MoveDown(object);
 							score++;
 							scoretext.setText("Score: " + Integer.toString(score));
@@ -169,6 +171,24 @@ public class Tetris extends Application {
 			}
 		};
 		fall.schedule(task, 0, 300);
+		
+		Timer lines = new Timer();
+		TimerTask checkTimeSinceLastLine = new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						if(linesNo<=linesNoSince) {
+							AddRow(group);
+							
+						}else {
+							linesNoSince = linesNo;
+						}
+					}
+				});
+			}
+		};
+		lines.schedule(checkTimeSinceLastLine, 3000, 3000);//this is really fast!
+		
 	}
 
 
@@ -201,12 +221,8 @@ public class Tetris extends Application {
 					}
 					break;
 				case H:
-					//something
 					HoldBlock(form, group);
 					break;
-				case T:
-					//just to test the method
-					AddRow(group);
 				}
 			}
 		});
