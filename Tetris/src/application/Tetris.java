@@ -262,7 +262,6 @@ public class Tetris extends Application {
 		
 	}
 	private void HoldBlock(Form form, Pane group) {
-		//maybe: delete original make deep copy which we store in the array, might
 		if(heldShape[0] == null) {
 			//erase form after making a copy
 			heldBlock = Controller.CopyForm(form);
@@ -291,9 +290,7 @@ public class Tetris extends Application {
 			group.getChildren().addAll(showNext.a,showNext.b,showNext.c,showNext.d);
 
 			heldShape[0]=heldBlock;
-
-			//show the held shape
-			//work in progress			
+		
 			Controller.ResetPosition(heldBlock, heldBlock.getName());
 			heldBlock.a.setX(heldBlock.a.getX() + 9*SIZE);
 			heldBlock.b.setX(heldBlock.b.getX() + 9*SIZE);
@@ -304,17 +301,36 @@ public class Tetris extends Application {
 			heldBlock.b.setY(heldBlock.b.getY() + 12*SIZE);
 			heldBlock.c.setY(heldBlock.c.getY() + 12*SIZE);
 			heldBlock.d.setY(heldBlock.d.getY() + 12*SIZE);
-			group.getChildren().addAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d);
-			//the add a new form to the game so it can continue 
+			group.getChildren().addAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d); 
 		}
 		else {
-			//there is already a held shape so we need to swap
-			if(heldBlock != null) {
+			//we make a copy of the held block then remove held block from the game
+			Form copy = Controller.CopyForm(heldBlock);
+			if(heldBlock!= null) {
 				group.getChildren().removeAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d);
 			}
-			Form temp = heldShape[0];
-			form = heldShape[0];
-			form = temp;
+			//we make a copy of the current moving block in the game, delete the old moving block 
+			heldBlock = Controller.CopyForm(form);
+			group.getChildren().removeAll(form.a,form.b,form.c,form.d);
+			//we take the copy of the old block and place it on the side of the screen
+			Controller.ResetPosition(heldBlock, heldBlock.getName());
+			heldBlock.a.setX(heldBlock.a.getX() + 9*SIZE);
+			heldBlock.b.setX(heldBlock.b.getX() + 9*SIZE);
+			heldBlock.c.setX(heldBlock.c.getX() + 9*SIZE);
+			heldBlock.d.setX(heldBlock.d.getX() + 9*SIZE);
+			heldBlock.a.setY(heldBlock.a.getY() + 12*SIZE);
+			heldBlock.b.setY(heldBlock.b.getY() + 12*SIZE);
+			heldBlock.c.setY(heldBlock.c.getY() + 12*SIZE);
+			heldBlock.d.setY(heldBlock.d.getY() + 12*SIZE);
+			group.getChildren().addAll(heldBlock.a, heldBlock.b, heldBlock.c, heldBlock.d);
+			//we take the copy of the old held block and place it onto the mesh as well as make it the new playable moving block
+			Controller.ResetPosition(copy, copy.getName());
+			group.getChildren().addAll(copy.a,copy.b,copy.c,copy.d);
+			heldShape[0] = heldBlock;
+			object = copy;
+			moveOnKeyPress(copy);
+			
+
 		}
 	}
 	
