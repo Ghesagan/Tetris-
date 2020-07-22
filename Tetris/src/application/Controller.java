@@ -47,6 +47,7 @@ public class Controller {
     public static Form CopyForm(Form form) {
     	Rectangle a = new Rectangle(SIZE-1, SIZE-1), b = new Rectangle(SIZE-1, SIZE-1), c = new Rectangle(SIZE-1, SIZE-1),
                 d = new Rectangle(SIZE-1, SIZE-1);
+    	String name = null;
     	a.setX(form.a.getX());
     	b.setX(form.b.getX());
     	c.setX(form.c.getX());
@@ -56,29 +57,53 @@ public class Controller {
     	c.setY(form.c.getY());
     	d.setY(form.d.getY());
     	
-		Form copy = new Form(a,b,c,d,form.getName());
+    	if(form.getName().equals("j")) {
+    		name = "j";
+    	}
+    	if(form.getName().equals("l")) {
+    		name = "l";
+    	}
+    	if(form.getName().equals("o")) {
+    		name = "o";
+    	}
+    	if(form.getName().equals("s")) {
+    		name = "s";
+    	}
+    	if(form.getName().equals("t")) {
+    		name = "t";
+    	}
+    	if(form.getName().equals("z")) {
+    		name = "z";
+    	}
+    	if(form.getName().equals("i")) {
+    		name = "i";
+    	}
+		Form copy = new Form(a,b,c,d,name);
 		return copy;
 	}
     
-    public static void SetUpRelativeXY(Form copy, String name) {
-    	if(name == "j") {
+//    public static double[] SetUpRelativeXY(Form copy, double target) {
+    	// 1st position is distance of a to target, 2nd is distance of a to b, 3rd is distance from a to c, 4th is distance from a to d
+//    	double[] distances = new double[4];
+//    	distances[0] = target - copy.a.getY();
+//    	distances[1] = copy.a.getY() - copy.b.getY();
+//    	distances[2] = copy.a.getY() - copy.c.getY();
+//    	distances[3] = copy.a.getY() - copy.d.getY();
+//    	return distances;
+    public static void ResetPosition(Form copy, String name) {
+    	if(name.equals("j")) {
     		copy.a.setX(XMAX / 2 - SIZE);
+    		copy.a.setY(0);
     		copy.b.setX(XMAX / 2 - SIZE);
     		copy.b.setY(SIZE);
     		copy.c.setX(XMAX / 2);
     		copy.c.setY(SIZE);
     		copy.d.setX(XMAX / 2 + SIZE);
     		copy.d.setY(SIZE);
-//    		a.setX(XMAX / 2 - SIZE);
-//            b.setX(XMAX / 2 - SIZE);
-//            b.setY(SIZE);
-//            c.setX(XMAX / 2);
-//            c.setY(SIZE);
-//            d.setX(XMAX / 2 + SIZE);
-//            d.setY(SIZE);
     	}
-    	if(name == "l") {
+    	if(name.equals("l")) {
     		copy.a.setX(XMAX / 2 + SIZE);
+    		copy.a.setY(0);
     		copy.b.setX(XMAX / 2 - SIZE);
     		copy.b.setY(SIZE);
     		copy.c.setX(XMAX / 2);
@@ -86,49 +111,62 @@ public class Controller {
     		copy.d.setX(XMAX / 2 + SIZE);
     		copy.d.setY(SIZE);
     	}
-    	if(name == "o") {
+    	if(name.equals("o")) {
     		copy.a.setX(XMAX / 2 - SIZE);
+    		copy.a.setY(0);
     		copy.b.setX(XMAX / 2);
+    		copy.b.setY(0);
     		copy.c.setX(XMAX / 2 - SIZE);
     		copy.c.setY(SIZE);
     		copy.d.setX(XMAX / 2);
     		copy.d.setY(SIZE);
 
     	}
-    	if(name == "s") {
+    	if(name.equals("s")) {
     		copy.a.setX(XMAX / 2 + SIZE);
+    		copy.a.setY(0);
     		copy.b.setX(XMAX / 2);
+    		copy.b.setY(0);
     		copy.c.setX(XMAX / 2);
     		copy.c.setY(SIZE);
     		copy.d.setX(XMAX / 2 - SIZE);
     		copy.d.setY(SIZE);
-    	}		
-    	if(name == "t") {
+    	}
+    	if(name.equals("t")) {
     		copy.a.setX(XMAX / 2 - SIZE);
+    		copy.a.setY(0);
     		copy.b.setX(XMAX / 2);
-            copy.c.setX(XMAX / 2);
-            copy.c.setY(SIZE);
-            copy.d.setX(XMAX / 2 + SIZE);
+    		copy.b.setY(0);
+    		copy.c.setX(XMAX / 2);
+    		copy.c.setY(SIZE);
+    		copy.d.setX(XMAX / 2 + SIZE);
+    		copy.d.setY(0);
 
     	}
-    	if(name == "z") {
+    	if(name.equals("z")) {
     		copy.a.setX(XMAX / 2);
+    		copy.a.setY(0);
     		copy.b.setX(XMAX / 2 - SIZE);
+    		copy.b.setY(0);
     		copy.c.setX(XMAX / 2);
     		copy.c.setY(SIZE);
     		copy.d.setX(XMAX / 2 + SIZE);
     		copy.d.setY(SIZE);
 
     	}
-    	if(name == "i") {
+    	if(name.equals("i")) {
     		copy.a.setX(XMAX / 2 - SIZE - SIZE);
+    		copy.a.setY(0);
     		copy.b.setX(XMAX / 2 - SIZE);
+    		copy.b.setY(0);
     		copy.c.setX(XMAX / 2);
+    		copy.c.setY(0);
     		copy.d.setX(XMAX / 2 + SIZE);
+    		copy.d.setY(0);
 
     	}
     }
-    
+
     public static Form makeRect() {
         int block = (int) (Math.random() * 100);
         String name;

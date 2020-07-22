@@ -86,18 +86,23 @@ public class Tetris extends Application {
 		level.setY(100);
 		level.setX(XMAX + 5);
 		level.setFill(Color.GREEN);
-		Text nextblock = new Text("Next Block!");
+		Text nextblock = new Text("Next Block: ");
 		nextblock.setStyle("-fx-font: 20 arial;");
 		nextblock.setY(150);
 		nextblock.setX(XMAX + 5);
 		nextblock.setFill(Color.WHITE);
+		Text held = new Text("Held Block: ");
+		held.setStyle("-fx-font: 20 arial;");
+		held.setY(275);
+		held.setX(XMAX + 5);
+		held.setFill(Color.WHITE);
 		meshWipe = new Text(Integer.toString(meshWipeCount) + " Grid Wipes left!");
 		meshWipe.setStyle("-fx-font: 15 arial;");
 		meshWipe.setY(YMAX-25);
 		meshWipe.setX(XMAX + 5);
 		meshWipe.setFill(Color.WHITE);
 
-		group.getChildren().addAll(scoretext, line, level, nextblock, meshWipe);
+		group.getChildren().addAll(scoretext, line, level, nextblock, held, meshWipe);
 
 
 
@@ -257,10 +262,10 @@ public class Tetris extends Application {
 		
 	}
 	private void HoldBlock(Form form, Pane group) {
-		//maybe: delete orginal make deep copy which we store in the array, might
+		//maybe: delete original make deep copy which we store in the array, might
 		if(heldShape[0] == null) {
 			//erase form after making a copy
-			Form copy = Controller.CopyForm(form);
+			heldBlock = Controller.CopyForm(form);
 			group.getChildren().removeAll(form.a,form.b,form.c,form.d);
 
 			//creating the new nextObj and setting object equal to the old nextObj
@@ -275,39 +280,38 @@ public class Tetris extends Application {
 				group.getChildren().removeAll(showNext.a,showNext.b,showNext.c,showNext.d);
 			}
 			showNext = Controller.CopyForm(nextObj);
-			showNext.a.setX(showNext.a.getX()+ 9*SIZE);
-			showNext.b.setX(showNext.b.getX()+ 9*SIZE);
-			showNext.c.setX(showNext.c.getX()+ 9*SIZE);
-			showNext.d.setX(showNext.d.getX()+ 9*SIZE);
-			showNext.a.setY(showNext.a.getY()+7*SIZE);
-			showNext.b.setY(showNext.b.getY()+7*SIZE);
-			showNext.c.setY(showNext.c.getY()+7*SIZE);
-			showNext.d.setY(showNext.d.getY()+7*SIZE);
+			showNext.a.setX(showNext.a.getX() + 9*SIZE);
+			showNext.b.setX(showNext.b.getX() + 9*SIZE);
+			showNext.c.setX(showNext.c.getX() + 9*SIZE);
+			showNext.d.setX(showNext.d.getX() + 9*SIZE);
+			showNext.a.setY(showNext.a.getY() + 7*SIZE);
+			showNext.b.setY(showNext.b.getY() + 7*SIZE);
+			showNext.c.setY(showNext.c.getY() + 7*SIZE);
+			showNext.d.setY(showNext.d.getY() + 7*SIZE);
 			group.getChildren().addAll(showNext.a,showNext.b,showNext.c,showNext.d);
 
-			heldShape[0]=copy;
+			heldShape[0]=heldBlock;
 
 			//show the held shape
+			//work in progress			
+			Controller.ResetPosition(heldBlock, heldBlock.getName());
+			heldBlock.a.setX(heldBlock.a.getX() + 9*SIZE);
+			heldBlock.b.setX(heldBlock.b.getX() + 9*SIZE);
+			heldBlock.c.setX(heldBlock.c.getX() + 9*SIZE);
+			heldBlock.d.setX(heldBlock.d.getX() + 9*SIZE);
+			
+			heldBlock.a.setY(heldBlock.a.getY() + 12*SIZE);
+			heldBlock.b.setY(heldBlock.b.getY() + 12*SIZE);
+			heldBlock.c.setY(heldBlock.c.getY() + 12*SIZE);
+			heldBlock.d.setY(heldBlock.d.getY() + 12*SIZE);
+			group.getChildren().addAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d);
+			//the add a new form to the game so it can continue 
+		}
+		else {
+			//there is already a held shape so we need to swap
 			if(heldBlock != null) {
 				group.getChildren().removeAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d);
 			}
-			//work in progress			
-			Controller.SetUpRelativeXY(copy, copy.getName());
-			heldBlock.a.setX(heldBlock.a.getX()+9*SIZE);
-			heldBlock.b.setX(heldBlock.b.getX()+9*SIZE);
-			heldBlock.c.setX(heldBlock.c.getX()+9*SIZE);
-			heldBlock.d.setX(heldBlock.d.getX()+9*SIZE);
-			heldBlock.a.setY(heldBlock.a.getY()+9*SIZE);
-			heldBlock.b.setY(heldBlock.b.getY()+9*SIZE);
-			heldBlock.c.setY(heldBlock.c.getY()+9*SIZE);
-			heldBlock.d.setY(heldBlock.d.getY()+9*SIZE);
-			
-			
-			group.getChildren().addAll(heldBlock.a,heldBlock.b,heldBlock.c,heldBlock.d);
-			//the add a new form to the game so it can contiune 
-		}
-		else {
-			//there is already a heldshape so we need to swap
 			Form temp = heldShape[0];
 			form = heldShape[0];
 			form = temp;
