@@ -178,7 +178,7 @@ public class Tetris extends Application {
 				Platform.runLater(new Runnable() {
 					public void run() {
 						if(linesNo<=linesNoSince) {
-							AddRow(group);
+							AddRow(group, object);
 							
 						}else {
 							linesNoSince = linesNo;
@@ -187,7 +187,7 @@ public class Tetris extends Application {
 				});
 			}
 		};
-		lines.schedule(checkTimeSinceLastLine, 3000, 3000);//this is really fast!
+		lines.schedule(checkTimeSinceLastLine, 9000, 9000);//this is really fast!
 		
 	}
 
@@ -228,9 +228,16 @@ public class Tetris extends Application {
 		});
 	}
 	//has the same bug as the rest if the object in play is moving then its rectangles become invisable note, only happens when I call teh pushUp method 
-	private void AddRow(Pane group) {
+	private void AddRow(Pane group, Form obj) {
 		//we are going to make a auxillary funcion that pushes all the exsiting blocks up 
 		PushUpBlocks(group);
+		//just to make sure we don't generate the new row on top of the object
+		if(obj.a.getY()==23*SIZE || obj.b.getY()==23*SIZE || obj.c.getY()==23*SIZE || obj.d.getY()==23*SIZE) {
+			obj.a.setY(obj.a.getY()-SIZE);
+			obj.b.setY(obj.b.getY()-SIZE);
+			obj.c.setY(obj.c.getY()-SIZE);
+			obj.d.setY(obj.d.getY()-SIZE);	
+		}
 		//we have a empty row at the bottom of the screen that needs to be almost filled
 		Random rand = new Random();
 		int leaveEmpty = rand.nextInt(XMAX/SIZE); //yes?
@@ -360,7 +367,7 @@ public class Tetris extends Application {
 					if((r.getX() == object.a.getX() &&  r.getY() == object.a.getY())
 					|| (r.getX() == object.b.getX() && r.getY() == object.b.getY())
 					|| (r.getX() == object.c.getX() && r.getY() == object.c.getY())
-					|| (r.getY() == object.d.getY() && r.getY() == object.d.getY())) {
+					|| (r.getX() == object.d.getX() && r.getY() == object.d.getY())) {
 						//do nothing because we want to keep the shape that is in play.
 				}else {
 					rects.add(r);
