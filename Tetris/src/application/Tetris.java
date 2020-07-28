@@ -1,6 +1,5 @@
 package application;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -13,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import java.io.File;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -20,6 +20,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Tetris extends Application {
 	// The variables
@@ -42,26 +43,27 @@ public class Tetris extends Application {
 	private static Form heldBlock = null;
 	private static int meshWipeCount = 2;
 	private static Text meshWipe;
+	MediaPlayer mp;
 
 	public static void main(String[] args) {
 		launch(args);
 	}
-	//Two things to do, one add file to root project directory, two make a double thread in main should it give errors 
-	MediaPlayer mediaPlayer;
-	public void music() {
-		String s = "Tetris 99 - Main Theme";
-		//"C:\Users\Clauz\Music\Tetris 99 - Main Theme";
-		Media h = new Media(Paths.get(s).toUri().toString());
-		mediaPlayer = new MediaPlayer(h);
-		mediaPlayer.play();;
-	}
+	
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		for (int[] a : MESH) {
 			Arrays.fill(a, 0);
 		}
-		//music();
+		// music. replace "C:/Users/chand/git/Tetris-/Tetris/Tetris 99 - Main Theme.mp3" with the mp3's file path on your computer
+		String path = "C:/Users/chand/git/Tetris-/Tetris/Tetris 99 - Main Theme.mp3";
+        Media media = new Media(new File(path).toURI().toString());
+        mp = new MediaPlayer(media);
+        mp.setCycleCount(MediaPlayer.INDEFINITE);
+        mp.seek(Duration.ZERO);
+        mp.setAutoPlay(true);
+        
+		
 		Line line = new Line(XMAX, 0, XMAX, YMAX);
 		line.setStroke(Color.WHITE);
 
@@ -227,9 +229,9 @@ public class Tetris extends Application {
 			}
 		});
 	}
-	//has the same bug as the rest if the object in play is moving then its rectangles become invisable note, only happens when I call teh pushUp method 
+	 
 	private void AddRow(Pane group, Form obj) {
-		//we are going to make a auxillary funcion that pushes all the exsiting blocks up 
+		//we are going to make a auxiliary function that pushes all the existing blocks up 
 		PushUpBlocks(group);
 		//just to make sure we don't generate the new row on top of the object
 		if(obj.a.getY()==23*SIZE || obj.b.getY()==23*SIZE || obj.c.getY()==23*SIZE || obj.d.getY()==23*SIZE) {
@@ -357,7 +359,7 @@ public class Tetris extends Application {
 		}
 	}
 	
-	//current issue, it also erases the new shape on the screen but not in the mesh
+	// wipe the screen
 	private void MeshWipe(Pane group) {
 		ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 		for (Node node : group.getChildren()) {
