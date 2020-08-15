@@ -62,18 +62,19 @@ public class Tetris extends Application {
         mp.setCycleCount(MediaPlayer.INDEFINITE);
         mp.seek(Duration.ZERO);
         mp.setAutoPlay(true);
+        mp.setVolume(0.05);
         
 		
 		Line line = new Line(XMAX, 0, XMAX, YMAX);
 		line.setStroke(Color.WHITE);
 
 		// To make the grid lines
-		for(int i = 0; i < 12; i++) {
+		for(int i = 0; i < XMAX/SIZE; i++) {
 			Line gridline = new Line(SIZE*i+SIZE, 0, SIZE*i +SIZE, YMAX);
 			gridline.setStroke(Color.WHITE);
 			group.getChildren().add(gridline);
 		}
-		for(int i = 0; i < 24; i++) {
+		for(int i = 0; i < YMAX/SIZE; i++) {
 			Line gridline = new Line(0, SIZE*i+SIZE, XMAX, SIZE*i+SIZE);
 			gridline.setStroke(Color.WHITE);
 			group.getChildren().add(gridline);
